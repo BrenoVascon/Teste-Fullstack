@@ -3,6 +3,7 @@ const taskForm = document.getElementById('task-form'); // Formulário de adiçã
 const taskTitleInput = document.getElementById('task-title'); // Campo de input da tarefa
 const logoutButton = document.getElementById('logout-button'); // Botão de logout
 
+// Função para carregar as tarefas
 async function loadTasks() {
   const token = localStorage.getItem('token');
   const response = await fetch('http://localhost:3000/api/tasks', {
@@ -19,9 +20,13 @@ async function loadTasks() {
     li.className = `task-item ${task.status === 'completed' ? 'completed' : 'pending'}`; // Adiciona a classe correta
     li.textContent = task.title;
 
-    // Botão para marcar como concluída
+    // Botão para marcar como concluída com ícone
     const completeButton = document.createElement('button');
-    completeButton.textContent = task.status === 'pending' ? 'Marcar como completa' : 'Marcar como pendente';
+    completeButton.innerHTML = task.status === 'pending'
+      ? '<span class="check-icon">&#x25CB;</span>'  // Círculo vazio para pendente
+      : '<span class="check-icon">&#x2713;</span>'; // Checkmark para completo
+
+    completeButton.className = 'complete-button'; // Adiciona a classe de estilo
     completeButton.addEventListener('click', async () => {
       const newStatus = task.status === 'pending' ? 'completed' : 'pending';
       await updateTaskStatus(task.id, newStatus);
@@ -36,12 +41,13 @@ async function loadTasks() {
       loadTasks(); // Recarrega as tarefas
     });
 
-    li.appendChild(completeButton);
+    li.insertBefore(completeButton, li.firstChild); // Insere o botão de completar antes do texto da tarefa
     li.appendChild(deleteButton);
     taskList.appendChild(li);
   });
 }
 
+// Função para atualizar o status da tarefa
 async function updateTaskStatus(id, status) {
   const token = localStorage.getItem('token');
   await fetch(`http://localhost:3000/api/tasks/${id}`, {
@@ -50,59 +56,59 @@ async function updateTaskStatus(id, status) {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
-    body: JSON.stringify({ status }) // Sending status to update
+    body: JSON.stringify({ status })
   });
 }
 
+
 async function deleteTask(id) {
-    const token = localStorage.getItem('token');
-    await fetch(`http://localhost:3000/api/tasks/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
+  const token = localStorage.getItem('token');
+  await fetch(`http://localhost:3000/api/tasks/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
 }
 
 // Função para adicionar uma nova tarefa
 async function addTask(title) {
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
-    const response = await fetch('http://localhost:3000/api/tasks', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ title })
-    });
+  const response = await fetch('http://localhost:3000/api/tasks', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ title })
+  });
 
-    if (response.ok) {
-        // Tarefa adicionada com sucesso, recarrega a lista de tarefas
-        loadTasks();
-    } else {
-        console.error('Erro ao adicionar tarefa');
-    }
+  if (response.ok) {
+
+    loadTasks();
+  } else {
+    console.error('Erro ao adicionar tarefa');
+  }
 }
 
-// Função de logout
+
 function logout() {
-    localStorage.removeItem('token');
-    window.location.href = '/front/pages/login.html';
+  localStorage.removeItem('token');
+  window.location.href = '/front/pages/login.html';
 }
 
-// Escuta o evento de envio do formulário para adicionar nova tarefa
+
 taskForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Evita o comportamento padrão de recarregar a página
+  event.preventDefault();
+  const title = taskTitleInput.value.trim();
 
-    const title = taskTitleInput.value.trim(); // Pega o valor do input
-
-    if (title) {
-        await addTask(title); // Adiciona a tarefa
-        taskTitleInput.value = ''; // Limpa o campo de input
-    } else {
-        alert('Por favor, insira um título para a tarefa.');
-    }
+  if (title) {
+    await addTask(title);
+    taskTitleInput.value = '';
+  } else {
+    alert('Por favor, insira um título para a tarefa.');
+  }
 });
 
 // Escuta o evento de clique no botão de logout

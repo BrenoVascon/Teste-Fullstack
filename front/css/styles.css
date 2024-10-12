@@ -35,6 +35,7 @@ button {
   color: white;
   border: none;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 button:hover {
@@ -77,8 +78,31 @@ button:hover {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 #logout-button:hover {
   background-color: #d32f2f; /* Cor vermelha mais escura ao passar o mouse */
+}
+/* Estilo para o botão de completar tarefa */
+.complete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.complete-button .check-icon {
+  display: inline-block;
+  color: #28a745; /* Verde para tarefa completa */
+  font-weight: bold;
+}
+
+.task-item.pending .check-icon {
+  color: #ccc; /* Cor cinza para tarefa pendente */
+}
+
+.task-item.completed .check-icon {
+  color: #28a745; /* Cor verde para tarefa completada */
 }
