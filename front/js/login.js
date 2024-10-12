@@ -18,7 +18,6 @@ function showSignupForm() {
   document.getElementById('showLogin').style.display = 'inline';
 }
 
-// Submissão do formulário de login
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
   event.preventDefault();
 

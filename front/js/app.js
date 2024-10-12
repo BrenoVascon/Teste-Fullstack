@@ -1,9 +1,8 @@
-const taskList = document.getElementById('task-list'); // Certifique-se que o ID está correto
-const taskForm = document.getElementById('task-form'); // Formulário de adição de tarefa
-const taskTitleInput = document.getElementById('task-title'); // Campo de input da tarefa
-const logoutButton = document.getElementById('logout-button'); // Botão de logout
+const taskList = document.getElementById('task-list');
+const taskForm = document.getElementById('task-form');
+const taskTitleInput = document.getElementById('task-title');
+const logoutButton = document.getElementById('logout-button');
 
-// Função para carregar as tarefas
 async function loadTasks() {
   const token = localStorage.getItem('token');
   const response = await fetch('http://localhost:3000/api/tasks', {
@@ -13,41 +12,40 @@ async function loadTasks() {
   });
   const tasks = await response.json();
 
-  taskList.innerHTML = ''; // Limpa a lista antes de carregar novas tarefas
+  taskList.innerHTML = '';
 
   tasks.forEach(task => {
     const li = document.createElement('li');
-    li.className = `task-item ${task.status === 'completed' ? 'completed' : 'pending'}`; // Adiciona a classe correta
+    li.className = `task-item ${task.status === 'completed' ? 'completed' : 'pending'}`;
     li.textContent = task.title;
 
     // Botão para marcar como concluída com ícone
     const completeButton = document.createElement('button');
     completeButton.innerHTML = task.status === 'pending'
-      ? '<span class="check-icon">&#x25CB;</span>'  // Círculo vazio para pendente
-      : '<span class="check-icon">&#x2713;</span>'; // Checkmark para completo
+      ? '<span class="check-icon">&#x25CB;</span>'
+      : '<span class="check-icon">&#x2713;</span>';
 
-    completeButton.className = 'complete-button'; // Adiciona a classe de estilo
+    completeButton.className = 'complete-button';
     completeButton.addEventListener('click', async () => {
       const newStatus = task.status === 'pending' ? 'completed' : 'pending';
       await updateTaskStatus(task.id, newStatus);
-      loadTasks(); // Recarrega as tarefas
+      loadTasks();
     });
 
-    // Botão para deletar
+
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Excluir';
     deleteButton.addEventListener('click', async () => {
       await deleteTask(task.id);
-      loadTasks(); // Recarrega as tarefas
+      loadTasks();
     });
 
-    li.insertBefore(completeButton, li.firstChild); // Insere o botão de completar antes do texto da tarefa
+    li.insertBefore(completeButton, li.firstChild);
     li.appendChild(deleteButton);
     taskList.appendChild(li);
   });
 }
 
-// Função para atualizar o status da tarefa
 async function updateTaskStatus(id, status) {
   const token = localStorage.getItem('token');
   await fetch(`http://localhost:3000/api/tasks/${id}`, {
