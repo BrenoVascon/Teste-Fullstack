@@ -1,27 +1,15 @@
 const jwt = require('jsonwebtoken');
-const client = require('../redis');
 
-const authenticateJWT = (req, res, next) => {
-    const token = req.headers.authorization?.split(' ')[1];
+const authenticateToken = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1];
 
-    if (!token) {
-        return res.sendStatus(403);
-    }
+    if (!token) return res.status(401).json({ error: 'Token não fornecido' });
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) {
-            return res.sendStatus(403);
-        }
-
-        client.get(`session:${user.username}`, (err, sessionData) => {
-            if (err || !sessionData) {
-                return res.sendStatus(403);
-            }
-
-            req.user = JSON.parse(sessionData);
-            next();
-        });
+      if (err) return res.status(403).json({ error: 'Token inválido' });
+      req.user = user;
+      next();
     });
-};
+  };
 
-module.exports = authenticateJWT;
+module.exports = authenticateToken;

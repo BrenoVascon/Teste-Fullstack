@@ -1,74 +1,78 @@
+const User = require('../models/User');
 const Task = require('../models/Task');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const client = require('../config/redis');
 
 exports.addTask = async (req, res) => {
     const { title } = req.body;
-    const userId = req.user.id; // Obter o ID do usuário do token
 
     if (!title) {
-        return res.status(400).json({ error: 'Título da tarefa é obrigatório' });
+      return res.status(400).json({ error: 'Título é obrigatório' });
     }
 
     try {
-        const newTask = await Task.create({ title, userId });
-        res.status(201).json(newTask);
+      const newTask = await Task.create({ title, status: 'pending', userId: req.user.id });
+      res.status(201).json(newTask);
     } catch (error) {
-        res.status(500).json({ error: 'Erro ao adicionar tarefa' });
+      console.error('Erro ao adicionar tarefa:', error);
+      res.status(500).json({ error: 'Erro ao adicionar tarefa' });
     }
-};
+  };
 
-exports.getTasks = async (req, res) => {
-    const userId = req.user.id; // Obter o ID do usuário do token
 
-    try {
-        const tasks = await Task.findAll({ where: { userId } });
-        res.json(tasks);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao listar tarefas' });
-    }
-};
-
-exports.updateTask = async (req, res) => {
+  exports.updateTask = async (req, res) => {
     const { id } = req.params;
-    const { title, status } = req.body; // Make sure to use the correct property name
-    const userId = req.user.id; // Obter o ID do usuário do token
+    const { title, status } = req.body;
 
     try {
-        const task = await Task.findOne({ where: { id, userId } });
-
-        if (!task) {
-            return res.status(404).json({ error: 'Tarefa não encontrada' });
-        }
+        const task = await Task.findByPk(id);
+        if (!task) return res.status(404).json({ error: 'Tarefa não encontrada' });
 
         if (title !== undefined) {
-            task.title = title; // Ensure you're updating title if provided
+            task.title = title;
         }
-        if (status !== undefined) { // Ensure you're checking the correct property
-            task.status = status; // Change 'completed' to 'status'
+
+        if (status !== undefined && ['pending', 'completed'].includes(status)) {
+            task.status = status;
+        } else if (status !== undefined) {
+            return res.status(400).json({ error: 'Status inválido. Use "pending" ou "completed".' });
         }
 
         await task.save();
         res.json(task);
     } catch (error) {
-        console.error(error); // Log the error
+        console.error('Erro ao atualizar tarefa:', error);
         res.status(500).json({ error: 'Erro ao atualizar tarefa' });
     }
 };
 
 
+
 exports.deleteTask = async (req, res) => {
     const { id } = req.params;
-    const userId = req.user.id; // Obter o ID do usuário do token
 
     try {
-        const task = await Task.findOne({ where: { id, userId } });
+      const task = await Task.findByPk(id);
+      if (!task) return res.status(404).json({ error: 'Tarefa não encontrada' });
 
-        if (!task) {
-            return res.status(404).json({ error: 'Tarefa não encontrada' });
-        }
-
-        await task.destroy();
-        res.status(204).send(); // No Content
+      await task.destroy();
+      res.status(204).send();
     } catch (error) {
-        res.status(500).json({ error: 'Erro ao remover tarefa' });
+      console.error('Erro ao deletar tarefa:', error);
+      res.status(500).json({ error: 'Erro ao deletar tarefa' });
+    }
+};
+
+exports.getTasks = async (req, res) => {
+    try {
+      console.log('Usuário autenticado:', req.user);
+      const tasks = await Task.findAll({
+        where: { userId: req.user.id }
+      });
+      res.json(tasks);
+    } catch (error) {
+      console.error('Erro ao obter tarefas:', error);
+      res.status(500).json({ error: 'Erro ao obter tarefas' });
     }
 };
