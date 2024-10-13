@@ -62,10 +62,10 @@ Também é recomendado utilizar um editor de código como o Visual Studio Code.
    ```
    npm install
    ```
-   4. **Para Conectar o backend com o PostgreSQL:**
-    ```
-    É necessario criar um arquivo .env no root do projeto:
+4. **Para Conectar o backend com o PostgreSQL:**
+   É necessario criar um arquivo .env no root do projeto:
     exemplo:
+    ```
     DB_HOST=localhost
     DB_NAME=testeEstagio
     DB_USER=postgres
@@ -76,7 +76,7 @@ Também é recomendado utilizar um editor de código como o Visual Studio Code.
 
    
 
-4. **Para Iniciar o servidor do backend:**
+5. **Para Iniciar o servidor do backend:**
     ```
     node src/server.js
     ```
