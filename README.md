@@ -30,6 +30,7 @@ Antes de começar, você precisa ter as seguintes ferramentas instaladas:
 
 - **Node.js:** [Instale aqui](https://nodejs.org/)
 - **Git:** [Instale aqui](https://git-scm.com/)
+- **PostgreSql:**[Instale Aqui](https://www.postgresql.org/)
 
 Também é recomendado utilizar um editor de código como o Visual Studio Code.
 
