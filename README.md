@@ -4,9 +4,6 @@
 
 Este projeto é uma aplicação de lista de tarefas (To-Do List) que utiliza uma arquitetura full-stack com Node.js, Redis para caching e JWT para autenticação. 
 
-## 🎯 Objetivo
-
-O objetivo deste projeto é criar uma página web que exibe produtos, permitindo ao usuário clicar em um item para visualizar mais detalhes em um modal. O layout é implementado pixel a pixel, respeitando fontes, cores e botões.
 
 ## 📋 Especificações Técnicas
 
@@ -27,7 +24,7 @@ O que deve estar instalado no sistema (Node.js, Redis, PostgreSQL).
 
 Passos para Configuração: 
 
-Defina as variáveis de ambiente (.env), como JWT_SECRET e configurações do banco de dados. 
+Defina as variáveis de ambiente (.env), como JWT_SECRET e configurações do banco de dados Postgresql. 
 
 Antes de começar, você precisa ter as seguintes ferramentas instaladas:
 
@@ -60,15 +57,13 @@ Também é recomendado utilizar um editor de código como o Visual Studio Code.
    É necessario criar um arquivo .env no root do projeto:
     exemplo:
     ```
-    DB_HOST=localhost
-    DB_NAME=testeEstagio
+    DB_HOST=nome_host
+    DB_NAME=nome_seu_banco
     DB_USER=postgres
     DB_PASSWORD=suasenha
     JWT_SECRET=sua_chave_secreta
     PORT=3000
     ```
-
-   
 
 5. **Para Iniciar o servidor do backend:**
     ```
