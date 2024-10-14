@@ -27,12 +27,6 @@ O que deve estar instalado no sistema (Node.js, Redis, PostgreSQL).
 
 Passos para Configuração: 
 
-Clone o repositório. 
-
-Instale as dependências com npm install. 
-
-Configure o banco de dados e Redis. 
-
 Defina as variáveis de ambiente (.env), como JWT_SECRET e configurações do banco de dados. 
 
 Antes de começar, você precisa ter as seguintes ferramentas instaladas:
@@ -80,5 +74,5 @@ Também é recomendado utilizar um editor de código como o Visual Studio Code.
     ```
     node src/server.js
     ```
-
+6. ** Com o servidor do backend conectado, basta abrir o open server do arquivo Login.html e utilizar a aplicação **
 
