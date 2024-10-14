@@ -69,5 +69,5 @@ Também é recomendado utilizar um editor de código como o Visual Studio Code.
     ```
     node src/server.js
     ```
-6. ** Com o servidor do backend conectado, basta abrir o open server do arquivo Login.html e utilizar a aplicação **
+6. **Com o servidor do backend conectado, basta abrir o open server do arquivo Login.html e utilizar a aplicação**
 
