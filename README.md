@@ -1,5 +1,3 @@
-# Teste: Vaga de Estágio Engenharia de Software
-
 # Projeto - Todo List - FullStack 
 
 Este projeto é uma aplicação de lista de tarefas (To-Do List) que utiliza uma arquitetura full-stack com Node.js, Redis para caching e JWT para autenticação. 
